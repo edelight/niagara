@@ -1,0 +1,32 @@
+{
+  "name": "niagara",
+  "version": "0.0.0",
+  "description": "promises down the waterfall",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/m90/niagara.git"
+  },
+  "keywords": [
+    "promises",
+    "async",
+    "waterfall",
+    "chain"
+  ],
+  "author": "Frederik Ring <frederik.ring@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/m90/niagara/issues"
+  },
+  "homepage": "https://github.com/m90/niagara#readme",
+  "devDependencies": {
+    "jshint": "^2.8.0",
+    "mocha": "^2.2.5"
+  },
+  "dependencies": {
+    "promise": "^7.0.3"
+  }
+}
