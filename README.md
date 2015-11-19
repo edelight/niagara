@@ -1,5 +1,5 @@
 # niagara
-> map a collection against a Promise returning function while keeping a given concurrency limit
+> map a collection against an async function while keeping a given concurrency limit
 
 [![Build Status](https://travis-ci.org/m90/niagara.svg?branch=master)](https://travis-ci.org/m90/niagara)
 

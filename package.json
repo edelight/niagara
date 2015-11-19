@@ -1,7 +1,7 @@
 {
   "name": "niagara",
   "version": "0.0.1",
-  "description": "map a collection against a Promise returning function while keeping a given concurrency limit",
+  "description": "map a collection against an async function while keeping a given concurrency limit",
   "main": "index.js",
   "scripts": {
     "pretest": "node_modules/.bin/jshint .",
