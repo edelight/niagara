@@ -1,9 +1,7 @@
 var assert = require('assert');
 var Promise = require('promise');
-
 var _ = require('underscore');
 
-var Promise = require('promise');
 var Niagara = require('./../index.js');
 
 var niagara = new Niagara(Promise);
