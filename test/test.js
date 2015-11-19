@@ -31,16 +31,24 @@ describe('Niagara', function(){
 		var instance = new Niagara(Promise);
 		assert(instance);
 	});
-	it('exposes a `queue` method', function(){
-		var instance = new Niagara(Promise);
-		assert(instance.queue);
-		assert(_.isFunction(instance.queue));
-	});
 	it('throws when unable to use the passed Promise implementation', function(){
 		assert.throws(function(){
 			var instance = new Niagara({ nope: true });
 		});
+		assert.throws(function(){
+			var instance = new Niagara('string');
+		});
 	});
+});
+
+describe('Niagara instance', function(){
+	it('exposes a `queue` method', function(){
+		var instance = new Niagara(Promise);
+		assert(instance.queue);
+		assert(_.isFunction(instance.queue));
+		assert.equal(instance.queue.length, 3);
+	});
+
 });
 
 describe('#queue', function(){
@@ -55,7 +63,7 @@ describe('#queue', function(){
 			assert.deepEqual(result, wrappedValues);
 		});
 	});
-	it('handle collections of a single item properly', function(){
+	it('handles collections of a single item properly', function(){
 		return niagara.queue(singleValue, delayValue).then(function(result){
 			assert.deepEqual(result, singleValue);
 		});
