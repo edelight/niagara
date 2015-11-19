@@ -1,6 +1,8 @@
 # niagara
 > map a collection against a Promise returning function while keeping a given concurrency limit
 
+[![Build Status](https://travis-ci.org/m90/niagara.svg?branch=master)](https://travis-ci.org/m90/niagara)
+
 ### Installation:
 
 Install from npm:
