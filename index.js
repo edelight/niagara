@@ -38,6 +38,15 @@ function Niagara(PromiseImpl){
 					};
 				}
 
+				function processNext(){
+					var next = thunks.splice(0, 1)[0];
+					if (isFunction(next)){
+						next()
+							.then(processNext)
+							.catch(reject);
+					}
+				}
+
 				thunks = collection.map(thunkify.bind(null, transform));
 				initialBatch = thunks.splice(0, concurrencyLimit);
 
@@ -47,14 +56,6 @@ function Niagara(PromiseImpl){
 						.catch(reject);
 				});
 
-				function processNext(){
-					var next = thunks.splice(0, 1)[0];
-					if (isFunction(next)){
-						next()
-							.then(processNext)
-							.catch(reject);
-					}
-				}
 
 			});
 		}
