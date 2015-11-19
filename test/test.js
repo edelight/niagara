@@ -52,7 +52,7 @@ describe('Niagara instance', function(){
 });
 
 describe('#queue', function(){
-	this.timeout(10000);
+	this.timeout(25000);
 	it('maps a collection against a promise returning function', function(){
 		return niagara.queue(values, delayValue).then(function(result){
 			assert.deepEqual(result, values);
@@ -76,10 +76,19 @@ describe('#queue', function(){
 			assert.equal(8, maxRunning);
 		});
 	});
-	it('respects the given concurrency threshold', function(){
+	it('respects the given concurrency threshold, given 3', function(){
 		currentlyRunning = 0;
 		maxRunning = 0;
 		var limit = 3;
+		return niagara.queue(values, delayValue, limit).then(function(result){
+			assert.deepEqual(result, values);
+			assert.equal(limit, maxRunning);
+		});
+	});
+	it('respects the given concurrency threshold, given 1', function(){
+		currentlyRunning = 0;
+		maxRunning = 0;
+		var limit = 1;
 		return niagara.queue(values, delayValue, limit).then(function(result){
 			assert.deepEqual(result, values);
 			assert.equal(limit, maxRunning);

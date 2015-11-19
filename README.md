@@ -15,11 +15,12 @@ $ npm install niagara --save
 
 ```js
 import Niagara from 'niagara';
+import {getJSON} from 'jquery';
 
 const niagara = new Niagara(Promise);
 
 const callResource = (id) => {
-    return $.getJSON(`https://my.api.com/resource/${id}`).promise();
+    return getJSON(`https://my.api.com/resource/${id}`).promise();
 };
 
 const resourceIds = ['1','2','3'/*....*/,'456'];
