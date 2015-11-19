@@ -20,6 +20,16 @@ function delayValue(value){
 	});
 }
 
+function rejectZalgo(value){
+	return new Promise(function(resolve, reject){
+		if (value === 'zalgo'){
+			reject(new Error('Zalgo not allowed'));
+		} else {
+			resolve(value);
+		}
+	});
+}
+
 var values = _.map(_.range(34), function(){ return 'some-value'; });
 var wrappedValues = _.map(_.range(34), function(){ return ['zalgo']; });
 var singleValue = ['lonesome'];
@@ -91,5 +101,16 @@ describe('#queue', function(){
 			assert.deepEqual(result, values);
 			assert.equal(limit, maxRunning);
 		});
+	});
+	it('propagates rejections correctly', function(){
+		var strings = ['foo', 'zalgo', 'bar'];
+		return niagara.queue(strings, rejectZalgo)
+			.then(function(){
+				assert(false);
+			})
+			.catch(function(err){
+				assert(err);
+				assert.equal(err.message, 'Zalgo not allowed');
+			});
 	});
 });
