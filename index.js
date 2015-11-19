@@ -20,7 +20,7 @@ function Niagara(PromiseImpl){
 		}
 
 		return new PromiseImpl(function(resolve, reject){
-			/*jshint undef:true */
+			/*jshint undef:false */
 			var
 			doneItems = 0
 			, thunks = []
