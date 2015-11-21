@@ -1,62 +1,48 @@
-function isFunction(el){
-	return Object.prototype.toString.call(el) === '[object Function]';
-}
+module.exports = function concurrentPromiseQueue(collection, transform, concurrencyLimit, PromiseImpl){
 
-function Niagara(PromiseImpl){
+	var
+	isArray = Array.isArray || function(el){ return Object.prototype.toString.call(el) === '[object Array]'; }
+	, LocalPromise = PromiseImpl || global.Promise;
 
-	PromiseImpl = PromiseImpl || (global && global.PromiseImpl);
-
-	if (!PromiseImpl.all || !PromiseImpl.resolve || !(PromiseImpl.resolve().then)){
-		throw new Error('Unable to use passed Promise implementation');
+	if (!LocalPromise){
+		throw new Error('niagara could not find Promise implementation');
 	}
 
-	this.queue = function(collection, transform, concurrencyLimit){
+	collection = Array.prototype.slice.call(collection);
+	concurrencyLimit = concurrencyLimit || 8;
 
-		collection = [].slice.call(collection);
-		concurrencyLimit = concurrencyLimit || 8;
+	return new LocalPromise(function(resolve, reject){
 
-		if (collection.length <= concurrencyLimit){
-			return PromiseImpl.all(collection.map(transform));
-		}
+		var results = [], i = -1, j, next;
 
-		return new PromiseImpl(function(resolve, reject){
-			/*jshint latedef:false */
-			var
-			doneItems = 0
-			, thunks = []
-			, results = []
-			, initialBatch;
-
-			function thunkify(fn, el, index){
-				return function(){
-					return fn.call(fn, el).then(function(result){
-						results[index] = result;
-						doneItems++;
-						if (doneItems === collection.length){
-							resolve(results);
-						}
-					});
-				};
-			}
-
-			function handleThunk(thunk){
-				thunk().then(processNext).catch(reject);
-			}
-
-			function processNext(){
-				var next = thunks.splice(0, 1)[0];
-				if (isFunction(next)){
-					handleThunk(next);
+		function processElements(){
+			if (++i < collection.length){
+				try {
+					next = transform(collection[i]);
+					results.push(next);
+					return LocalPromise.resolve(next);
+				} catch (err) {
+					next = LocalPromise.reject(err);
+					results.push(next);
+					return LocalPromise.resolve();
 				}
 			}
+			return results;
+		}
 
-			thunks = collection.map(thunkify.bind(null, transform));
-			initialBatch = thunks.splice(0, concurrencyLimit);
-			initialBatch.forEach(handleThunk);
+		function recurse(){
+			var nextValue = processElements();
+			if (nextValue && nextValue.then){
+				nextValue.then(recurse);
+			} else if (isArray(nextValue)){
+				resolve(LocalPromise.all(nextValue));
+			}
+		}
 
-		});
-	};
+		for (j = 0; j < Math.min(concurrencyLimit, collection.length); j++){
+			recurse();
+		}
 
-}
+	});
 
-module.exports = Niagara;
+};

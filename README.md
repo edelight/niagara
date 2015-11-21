@@ -14,10 +14,8 @@ $ npm install niagara --save
 ### Example:
 
 ```js
-import Niagara from 'niagara';
+import niagara from 'niagara';
 import {getJSON} from 'jquery';
-
-const niagara = new Niagara(Promise);
 
 const callResource = (id) => {
     return getJSON(`https://my.api.com/resource/${id}`).promise();
@@ -25,8 +23,7 @@ const callResource = (id) => {
 
 const resourceIds = ['1','2','3'/*....*/,'456'];
 
-niagara
-    .queue(resourceIds, callResource)
+niagara(resourceIds, callResource)
     .then((result) => {
         // array containing the results of each call
     })
@@ -37,20 +34,10 @@ niagara
 
 ### API:
 
-##### Constructor
-
-Pass a Promise implementation to the constructor or leave empty when we can assume a native one.
+Pass an Array and a function that transforms each value of that Array into a Promise or a synchronous value. If not given the limit for concurrent operations defaults to 8.
 
 ```js
-var niagara = new Niagara(PromiseImplementation);
-```
-
-##### #queue
-
-Pass an Array and a function that transforms each value of that Array into a Promise. If not given the limit for concurrent operations defaults to 8.
-
-```js
-niagara.queue(collection, transformFn [, concurrencyLimit]);
+niagara(collection, transformFn [, concurrencyLimit]);
 ```
 
 ### License
