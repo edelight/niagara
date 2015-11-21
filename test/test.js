@@ -34,8 +34,8 @@ function identity(value){
 	return value;
 }
 
-function sometimesAsync(value){
-	return Math.random() > 0.5 ? value : Promise.resolve(value);
+function sometimesAsync(value, index){
+	return index % 2 === 0 ? value : delayValue(value);
 }
 
 function syncError(value){
@@ -103,6 +103,11 @@ describe('niagara', function(){
 			assert.equal(values.length, maxRunning);
 		});
 	});
+	it('can handle synchronous return values', function(){
+		return niagara(values, identity, 8).then(function(result){
+			assert.deepEqual(result, values);
+		});
+	});
 	it('propagates rejections correctly', function(){
 		var strings = ['foo', 'zalgo', 'bar', 'zalgo'];
 		return niagara(strings, rejectZalgo).then(function(){
@@ -123,12 +128,7 @@ describe('niagara', function(){
 				assert.equal(err.message, 'Zalgo not allowed');
 			});
 	});
-	it('can handle synchronous return values', function(){
-		return niagara(values, identity, 8).then(function(result){
-			assert.deepEqual(result, values);
-		});
-	});
-	it('can handle synchronous and asynchronous return values', function(){
+	it('can handle synchronous and asynchronous return values in the same queue', function(){
 		return niagara(values, sometimesAsync, 8).then(function(result){
 			assert.deepEqual(result, values);
 		});
