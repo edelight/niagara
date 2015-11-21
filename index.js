@@ -13,9 +13,10 @@ module.exports = function concurrentPromiseQueue(collection, transform, concurre
 
 	return new LocalPromise(function(resolve, reject){
 
-		var results = [], i = -1, j, next;
+		var results = [], i = -1, j;
 
 		function processElements(){
+			var next;
 			if (++i < collection.length){
 				try {
 					next = transform(collection[i]);

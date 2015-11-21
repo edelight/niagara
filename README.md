@@ -34,10 +34,10 @@ niagara(resourceIds, callResource)
 
 ### API:
 
-Pass an Array and a function that transforms each value of that Array into a Promise or a synchronous value. If not given the limit for concurrent operations defaults to 8.
+Pass an Array and a function that transforms each value of that Array into a Promise or a synchronous value. If not given the limit for concurrent operations defaults to 8. If `global.Promise` is not available in your environment you also need to pass your used implementation.
 
 ```js
-niagara(collection, transformFn [, concurrencyLimit]);
+niagara(collection, transformFn [, concurrencyLimit, PromiseImplementation]);
 ```
 
 ### License
