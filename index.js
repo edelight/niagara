@@ -1,8 +1,8 @@
-function isPromise(el) {
+function isPromise(el){
 	return !!el && (typeof el === 'object' || typeof el === 'function') && typeof el.then === 'function';
 }
 
-function uid() {
+function uid(){
   return Math.random().toString(35).substr(2, 7);
 }
 
