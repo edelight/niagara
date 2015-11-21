@@ -1,6 +1,6 @@
 {
   "name": "niagara",
-  "version": "2.0.1",
+  "version": "3.0.0",
   "description": "map a collection against an async function while keeping a given concurrency limit",
   "main": "index.js",
   "scripts": {
