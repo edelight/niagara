@@ -60,7 +60,7 @@ An instance can be constructed without using the `new` keyword. Possible `option
 #### #map(transform [, thisArg])
 
 ```js
-Niagara([1,3,2,4], { limit: 2})
+Niagara([1,3,2,4], { limit: 2 })
     .map((element, index, collection) => { /* */ }, thisArg)
     .then((result) => console.log(result));
 ```
