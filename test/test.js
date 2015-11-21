@@ -116,7 +116,6 @@ describe('niagara', function(){
 	it('properly handles synchronous errors', function(){
 		var strings = ['foo', 'zalgo', 'bar'];
 		return niagara(strings, syncError).then(function(res){
-				console.log(res);
 				assert(false);
 			})
 			.catch(function(err){
