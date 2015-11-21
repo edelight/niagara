@@ -1,8 +1,10 @@
 module.exports = function concurrentPromiseQueue(collection, transform, concurrencyLimit, PromiseImpl){
 
 	var
-	isArray = Array.isArray || function(el){ return Object.prototype.toString.call(el) === '[object Array]'; }
-	, LocalPromise = PromiseImpl || global.Promise;
+	isPromise = function(el) {
+  		return !!el && (typeof el === 'object' || typeof el === 'function') && typeof el.then === 'function';
+	}
+	, LocalPromise = PromiseImpl || (global && global.Promise);
 
 	if (!LocalPromise){
 		throw new Error('niagara could not find Promise implementation');
@@ -15,27 +17,27 @@ module.exports = function concurrentPromiseQueue(collection, transform, concurre
 
 		var results = [], i = -1, j;
 
-		function processElements(){
+		function processNext(){
 			var next;
 			if (++i < collection.length){
 				try {
 					next = transform(collection[i]);
 					results.push(next);
-					return LocalPromise.resolve(next);
 				} catch (err) {
 					next = LocalPromise.reject(err);
 					results.push(next);
-					return LocalPromise.resolve();
+				} finally {
+					return LocalPromise.resolve(next);
 				}
 			}
 			return results;
 		}
 
 		function recurse(){
-			var nextValue = processElements();
-			if (nextValue && nextValue.then){
-				nextValue.then(recurse);
-			} else if (isArray(nextValue)){
+			var nextValue = processNext();
+			if (isPromise(nextValue)){
+				nextValue.then(recurse).catch(recurse);
+			} else {
 				resolve(LocalPromise.all(nextValue));
 			}
 		}

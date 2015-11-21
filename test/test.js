@@ -104,7 +104,7 @@ describe('niagara', function(){
 		});
 	});
 	it('propagates rejections correctly', function(){
-		var strings = ['foo', 'zalgo', 'bar'];
+		var strings = ['foo', 'zalgo', 'bar', 'zalgo'];
 		return niagara(strings, rejectZalgo).then(function(){
 				assert(false);
 			})
@@ -114,7 +114,7 @@ describe('niagara', function(){
 			});
 	});
 	it('properly handles synchronous errors', function(){
-		var strings = ['foo', 'zalgo', 'bar'];
+		var strings = ['foo', 'bar', 'zalgo'];
 		return niagara(strings, syncError).then(function(res){
 				assert(false);
 			})
