@@ -29,7 +29,10 @@ const callResource = (id) => {
     maxRunning = Math.max(currentlyRunning, maxRunning)
     return getJSON(`https://my.api.com/resource/${id}`)
         .promise()
-        .then(() => currentlyRunning--);
+        .then((result) => {
+            currentlyRunning--;
+            return result;
+        });
 };
 
 const resourceIds = ['1','2','3'/*....*/,'456'];
