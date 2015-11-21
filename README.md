@@ -1,5 +1,5 @@
 # niagara
-> transform a collection against an async function (while keeping a given concurrency limit)
+> asynchronous map and filter (while keeping a given concurrency limit)
 
 [![Build Status](https://travis-ci.org/m90/niagara.svg?branch=master)](https://travis-ci.org/m90/niagara)
 
@@ -15,8 +15,7 @@ $ npm install niagara --save
 
  Throttle HTTP requests down to a level that your server can handle or gracefully digest computation heavy asynchronous operations.
 
-
-### Example:
+### Examples:
 
 ```js
 import Niagara from 'niagara';
@@ -47,6 +46,23 @@ Niagara(resourceIds, { limit: 8 })
     });
 ```
 
+```js
+import Niagara from 'niagara';
+import {getJSON} from 'jquery';
+
+const callUnreliableResource = (id) => {
+    return getJSON(`https://my.api.com/404-on-odd-numbers/${id}`).promise();
+};
+
+const resourceIds = ['1','2','3'/*....*/,'456'];
+
+Niagara(resourceIds, { limit: 8 })
+    .filter(callResource)
+    .then((result) => {
+        // array containing the results of each successful call
+    });
+```
+
 ### API:
 
 #### Niagara(collection, options)
@@ -61,11 +77,23 @@ An instance can be constructed without using the `new` keyword. Possible `option
 
 ```js
 Niagara([1,3,2,4], { limit: 2 })
-    .map((element, index, collection) => { /* */ }, thisArg)
-    .then((result) => console.log(result));
+    .map((element, index, collection) => {
+        // return Promise or plain value
+    }, thisArg)
+    .then((result) => console.log(result))
+    .catch((err) => console.error(err));
 ```
 
-`#map` behaves exactly like `Array.prototype.map`
+#### #filter(predicate [, thisArg])
+
+```js
+Niagara([1,3,2,4], { limit: 2 })
+    .filter((element, index, collection) => {
+        // filter by rejecting the returned Promise
+        // or throwing an Error
+    }, thisArg)
+    .then((result) => console.log(result));
+```
 
 ### License
 MIT © [Frederik Ring](http://www.frederikring.com)

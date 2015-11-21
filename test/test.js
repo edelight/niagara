@@ -76,6 +76,11 @@ describe('Niagara', function(){
 		assert(n.map);
 		assert(_.isFunction(n.map));
 	});
+	it('exposes a filter method', function(){
+		var n = new Niagara([2, 3]);
+		assert(n.filter);
+		assert(_.isFunction(n.filter));
+	});
 	it('throws when being passed undefined', function(){
 		assert.throws(function(){
 			Niagara();
@@ -206,4 +211,62 @@ describe('#map', function(){
 			assert.deepEqual(result, values);
 		});
 	});
+});
+
+describe('#filter', function(){
+	this.timeout(25000);
+	it('filters out rejected promises', function(){
+		var strings = ['foo', 'zalgo', 'bar', 'zalgo'];
+		return Niagara(strings).filter(rejectZalgo).then(function(result){
+			assert.deepEqual(result, ['foo', 'bar']);
+		});
+	});
+	it('returns the empty list when all transforms yielded rejections', function(){
+		var strings = ['zalgo', 'zalgo', 'zalgo', 'zalgo'];
+		return Niagara(strings).filter(rejectZalgo).then(function(result){
+			assert.deepEqual(result, []);
+		});
+	});
+	it('properly handles synchronous errors', function(){
+		var strings = ['foo', 'bar', 'zalgo'];
+		return Niagara(strings).filter(syncError).then(function(result){
+			assert.deepEqual(result, ['foo', 'bar']);
+		});
+	});
+	it('behaves like map when all results are resolved', function(){
+		return Niagara(values).filter(delayValue).then(function(result){
+			assert.deepEqual(result, values);
+		});
+	});
+	it('respects the given concurrency threshold, given 3', function(){
+		var limit = 3;
+		currentlyRunning = 0;
+		maxRunning = 0;
+		return Niagara(values, { limit: limit }).filter(delayValue).then(function(result){
+			assert.deepEqual(result, values);
+			assert.equal(limit, maxRunning);
+		});
+	});
+	it('passes the correct element index to the transform', function(){
+		var letters = ['a','b','c'];
+		return Niagara(letters).filter(returnIndex).then(function(result){
+			assert.deepEqual(result, [0, 1, 2]);
+		});
+	});
+	it('passes the correct collection parameter to the transform', function(){
+		var letters = ['a','b','c'];
+		return Niagara(letters).filter(returnCollection).then(function(result){
+			assert.deepEqual(result[0], letters);
+			assert.deepEqual(result[1], letters);
+			assert.deepEqual(result[2], letters);
+		});
+	});
+	it('can be passed a context to bind the transform against', function(){
+		var numbers = [0, 1, 2];
+		var thisArg = { prop: 2 };
+		return Niagara(numbers).filter(addThisProp, thisArg).then(function(result){
+			assert.deepEqual(result, [2, 3, 4]);
+		});
+	});
+
 });

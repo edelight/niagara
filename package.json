@@ -1,7 +1,7 @@
 {
   "name": "niagara",
-  "version": "3.0.0",
-  "description": "map a collection against an async function while keeping a given concurrency limit",
+  "version": "3.1.0",
+  "description": "asynchronous map and filter while keeping a given concurrency limit",
   "main": "index.js",
   "scripts": {
     "pretest": "node_modules/.bin/jshint .",
