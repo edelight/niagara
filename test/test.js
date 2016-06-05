@@ -91,6 +91,12 @@ describe('Niagara', function(){
 			Niagara({foo: 'bar'});
 		});
 	});
+	it('can be passed a promise implementation to use as a default value', function(){
+		assert(_.isFunction(Niagara.setPromise));
+		assert.doesNotThrow(function(){
+			Niagara.setPromise(Promise);
+		});
+	});
 });
 
 describe('#map', function(){

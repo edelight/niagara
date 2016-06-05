@@ -13,12 +13,17 @@ function Niagara(collection, opts){
 		opts = opts || {};
 		this.limit = opts.limit || null;
 		this.Promise = opts.Promise
+			|| Niagara.Promise
 			|| (typeof global !== 'undefined' && global.Promise)
 			|| (typeof window !== 'undefined' && window.Promise);
 	} else {
 		return new Niagara(collection, opts);
 	}
 }
+
+Niagara.setPromise = function(promiseImpl){
+	Niagara.Promise = promiseImpl;
+};
 
 function iterate(filter, transform, thisArg){
 
