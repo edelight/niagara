@@ -2,9 +2,7 @@ function isPromise(el){
 	return !!el && (typeof el === 'object' || typeof el === 'function') && typeof el.then === 'function';
 }
 
-function uid(){
-	return Math.random().toString(35).substr(2, 7);
-}
+var REJECTION_SYMBOL = Math.random().toString(35).substr(2, 7);
 
 function Niagara(collection, opts){
 	if (!Array.isArray(collection)){
@@ -17,13 +15,12 @@ function Niagara(collection, opts){
 		this.Promise = opts.Promise
 			|| (typeof global !== 'undefined' && global.Promise)
 			|| (typeof window !== 'undefined' && window.Promise);
-		this._rejectionSymbol = uid();
 	} else {
 		return new Niagara(collection, opts);
 	}
 }
 
-Niagara.prototype._iterate = function(transform, thisArg, filter){
+function iterate(filter, transform, thisArg){
 
 	var self = this;
 	transform = thisArg ? transform.bind(thisArg) : transform;
@@ -59,7 +56,7 @@ Niagara.prototype._iterate = function(transform, thisArg, filter){
 					return new self.Promise(function(resolve, reject){
 						res.then(resolve).catch(function(err){
 							if (filter){
-								resolve(self._rejectionSymbol);
+								resolve(REJECTION_SYMBOL);
 							} else {
 								reject(err);
 							}
@@ -78,20 +75,20 @@ Niagara.prototype._iterate = function(transform, thisArg, filter){
 		}
 
 	});
-
-};
+}
 
 Niagara.prototype.map = function(transform, thisArg){
-	return this._iterate(transform, thisArg, false);
+	var mapper = iterate.bind(this, false);
+	return mapper(transform, thisArg);
 };
 
 Niagara.prototype.filter = function(predicate, thisArg){
-	var self = this;
-	return this._iterate(predicate, thisArg, true).then(function(results){
+	var filterer = iterate.bind(this, true);
+	return filterer(predicate, thisArg).then(function(results){
 		return results.filter(function(result){
-			return result !== self._rejectionSymbol;
-		});
-	});
+			return result !== REJECTION_SYMBOL;
+		}.bind(this));
+	}.bind(this));
 };
 
 module.exports = Niagara;
