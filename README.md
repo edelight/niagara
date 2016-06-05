@@ -76,6 +76,16 @@ var falls = Niagara([1,2,3,4], { limit: 4, Promise: require('bluebird') });
 
 An instance can be constructed without using the `new` keyword. Possible `options` are `limit`, setting the concurrency limit for all transformations and `Promise` for the promise implementation to use. If no Promise implementation is passed the library will look for a globally available or native version.
 
+#### Niagara.setPromise(promiseImplementation)
+
+You can configure the module with a default value for the used Promise implementation. This will be used when no implementation was passed in the options.
+
+```js
+Niagara.setPromise(require('bluebird'));
+var victoriaFalls = Niagara(list, { limit: 2 }); //uses bluebird
+var iguazuFalls = Niagara(list, { limit: 2, Promise: require('promise') }); //uses promise.js
+```
+
 #### #map(transform [, thisArg])
 
 ```js
