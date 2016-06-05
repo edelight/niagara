@@ -3,7 +3,7 @@ function isPromise(el){
 }
 
 function uid(){
-  return Math.random().toString(35).substr(2, 7);
+	return Math.random().toString(35).substr(2, 7);
 }
 
 function Niagara(collection, opts){
