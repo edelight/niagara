@@ -1,7 +1,7 @@
 # niagara
 > asynchronous map and filter (while keeping a given concurrency limit)
 
-[![Build Status](https://travis-ci.org/m90/niagara.svg?branch=master)](https://travis-ci.org/m90/niagara)
+[![Build Status](https://travis-ci.org/edelight/niagara.svg?branch=master)](https://travis-ci.org/edelight/niagara)
 
 ### Installation:
 

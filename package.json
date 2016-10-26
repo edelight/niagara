@@ -1,6 +1,6 @@
 {
   "name": "niagara",
-  "version": "3.2.0",
+  "version": "3.2.1",
   "description": "asynchronous map and filter while keeping a given concurrency limit",
   "main": "index.js",
   "scripts": {
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/m90/niagara.git"
+    "url": "git+https://github.com/edelight/niagara.git"
   },
   "testling": {
     "harness": "mocha-bdd",
@@ -32,9 +32,9 @@
   "author": "Frederik Ring <frederik.ring@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/m90/niagara/issues"
+    "url": "https://github.com/edelight/niagara/issues"
   },
-  "homepage": "https://github.com/m90/niagara#readme",
+  "homepage": "https://github.com/edelight/niagara#readme",
   "devDependencies": {
     "jshint": "^2.8.0",
     "mocha": "^2.2.5",
